@@ -7,8 +7,6 @@ import { Pellets } from '../shared/pellets.js';
 import './main.html';
 
 const BOARD_SIZE = 400;
-const STEP_SIZE = 22;
-const PLAYER_SIZE = 20;
 const PELLET_SIZE = 10;
 
 let randomColor = function() {
@@ -17,24 +15,6 @@ let randomColor = function() {
   let b = Math.floor(Math.random() * 255);
   return 'rgb('+r+","+g+","+b+")";
 };
-
-let nearbyPelletQuery = function(position, size) {
-  return { $and: [
-    { x: {$gte: position.x - size}},
-    { x: {$gte: position.x + size}},
-    { y: {$gte: position.y - size}},
-    { y: {$gte: position.y + size}}
-  ]};
-};
-
-let nextPosition = function(event, player) {
-  let diffX = event.offsetX - player.x;
-  let diffY = event.offsetY - player.y;
-  let dist = Math.sqrt(diffX*diffX + diffY*diffY);
-  let nextX = player.x + diffX * (STEP_SIZE / dist);
-  let nextY = player.y + diffY * (STEP_SIZE / dist);
-  return {x:nextX, y:nextY};
-}
 
 var updateGameBoard = function(gamecanvas) {
   Tracker.autorun(function() {
@@ -81,22 +61,17 @@ Template.game.onRendered(function (){
 Template.game.events({
   'click' (event) {
     let player = Players.findOne(Session.get('playerid'));
-    let newPos = nextPosition(event, player);
-
-    let hasPellet = Pellets.findOne( nearbyPelletQuery(nextPosition) );
-
-    if (hasPellet) {
-      Pellets.remove(hasPellet._id);
-      Players.update( player._id,
-        {$set: {x: newPos.x,
-                y: newPos.y,
-                points: player.points+ 1,
-                lastActive: new Date()}});
-    } else {
-      Players.update( player._id,
-        {$set: {x: newPos.x,
-                y: newPos.y,
-                lastActive: new Date()}});
-    }
+    Players.update(player._id,
+      {$set: {target_x: event.offsetX,
+              target_y: event.offsetY,
+              lastActive: new Date()}});
   }
+});
+
+Template.points.helpers({
+  getPoints(){return Players.findOne(Session.get('playerid')).points;}
+});
+
+Template.otherPoints.helpers({
+  players (){return Players.find({_id: {$not: Session.get('playerid')}})}
 });

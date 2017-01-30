@@ -5,8 +5,24 @@
 <body>
   <h1>Hungry Circles</h1>
   {{> game}}
+  <!-- {{> points}}
+  {{> otherPoints}} -->
 </body>
 
 <template name="game">
-  <canvas id="gamecanvas" wigth="400" height="400"></canvas>
+  <canvas id="gamecanvas" width="400" height="400" style="float:left;"></canvas>
+</template>
+
+<template name="points">
+  <h2>Your Score </h2>
+  <p>{{ getPoints }}</p>
+</template>
+
+<template name="otherPoints">
+  <h3>Competitor Scores</h3>
+  <ul style="float:right; padding-right:100px;">
+    {{#each players}}
+    <li style="color:{{color}};"> {{points}} </li>
+    {{/each}}
+  </ul>
 </template>
