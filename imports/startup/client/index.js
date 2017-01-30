@@ -6,7 +6,7 @@ import { Pellets } from '/imports/api/pellets/pellets.js';
 
 import '/imports/ui/pages/main.html';
 
-const BOARD_SIZE = 400;
+const BOARD_SIZE = 800;
 const PELLET_SIZE = 10;
 
 let randomColor = function() {
@@ -20,7 +20,7 @@ var updateGameBoard = function(gamecanvas) {
   Tracker.autorun(function() {
     let context = gamecanvas.getContext('2d');
     context.fillStyle = "rgb(45,45,45)";
-    context.fillRect(0,0,400,400);
+    context.fillRect(0,0,BOARD_SIZE,BOARD_SIZE);
 
     let players = Players.find().fetch();
     players.forEach( (user) => {
@@ -33,7 +33,7 @@ var updateGameBoard = function(gamecanvas) {
 
     let pellets = Pellets.find().fetch();
     pellets.forEach( (food) => {
-      context.fillStyle = "black";
+      context.fillStyle = "pink";
       context.fillRect(food.x - (PELLET_SIZE/2), food.y - (PELLET_SIZE/2), PELLET_SIZE, PELLET_SIZE);
     });
   });
