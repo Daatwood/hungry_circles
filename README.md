@@ -12,4 +12,4 @@
 
 **Heroku Deploy**
 
-See `https://github.com/jordansissel/heroku-buildpack-meteor`
+See `https://github.com/AdmitHub/meteor-buildpack-horse.git`
